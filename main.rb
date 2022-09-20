@@ -55,6 +55,16 @@ class Tree
                 delete(value, node.left_branch)
             end
         end
+        if value > node.data
+            if node.right_branch.data == value
+                if node.left_branch.left_branch.nil? && node.left_branch.right_branch.nil?
+                    node.right_branch.data = nil
+                    node.left_branch = nil
+                end
+            else
+                delete(value, node.right_branch)
+            end
+        end
     end
 
     def pretty_print(node = root, prefix = '', is_left = true)
@@ -68,6 +78,6 @@ end
 new_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 new_tree.pretty_print
 
-new_tree.delete(1)
+new_tree.delete(9)
 
 new_tree.pretty_print
