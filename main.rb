@@ -55,8 +55,8 @@ class Tree
                     node.left_branch.data = nil
                     node.left_branch = node.left_branch.right_branch
                 else
-                    node.data = min_value(node.right_branch)
-                    delete(value, node.right_branch)
+                    node.right_branch.data = min_value(node.right_branch)
+                    delete(node.right_branch.data, node.right_branch.right_branch)
                 end
             else 
                 delete(value, node.left_branch)
@@ -76,8 +76,8 @@ class Tree
                     # Take the lowest value from the right side of the tree
                     # That overwrites the node you're deleting
                     # Delete the lowest value you took, but make the starting node the new node of the same value
-                    node.data = min_value(node.right_branch)
-                    delete(value, node.right_branch)
+                    node.right_branch.data = min_value(node.right_branch)
+                    delete(node.right_branch.data, node.right_branch.right_branch)
                 end
             else
                 delete(value, node.right_branch)
@@ -85,14 +85,14 @@ class Tree
         end
     end
 
-    def min_value(node)
+    def min_value(node) # finds the smallest value in the RIGHT branch
         current_node = node
 
         until current_node.left_branch.nil?
-            current_node = current_node.left_branch
+            current_node = current_node.right_branch.left_branch
         end
         
-        current_node
+        current_node.data
     end
 
 
@@ -107,6 +107,6 @@ end
 new_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 new_tree.pretty_print
 
-new_tree.delete(7)
+new_tree.delete(67)
 
 new_tree.pretty_print
