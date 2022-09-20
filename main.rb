@@ -44,22 +44,31 @@ class Tree
 
     def delete(value, node = root)
         return nil if node.nil?
-        # No Children
+
         if value < node.data
             if node.left_branch.data == value
-                if node.left_branch.left_branch.nil? && node.left_branch.right_branch.nil?
+                # Removes leaves from tree
+                if node.left_branch.left_branch.nil? && node.left_branch.right_branch.nil? 
                     node.left_branch.data = nil
                     node.left_branch = nil
+                elsif  node.left_branch.left_branch.nil?# Removes branches with 1 leaf
+                    node.left_branch.data = nil
+                    node.left_branch = node.left_branch.right_branch
                 end
             else 
                 delete(value, node.left_branch)
             end
         end
-        if value > node.data
+
+        if value > node.data            
             if node.right_branch.data == value
+                #removes leaves from tree
                 if node.left_branch.left_branch.nil? && node.left_branch.right_branch.nil?
                     node.right_branch.data = nil
                     node.left_branch = nil
+                elsif node.right_branch.right_branch.nil?
+                    node.right_branch.data = nil 
+                    node.right_branch = node.right_branch.left_branch
                 end
             else
                 delete(value, node.right_branch)
@@ -78,6 +87,6 @@ end
 new_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 new_tree.pretty_print
 
-new_tree.delete(9)
+new_tree.delete(7)
 
 new_tree.pretty_print
