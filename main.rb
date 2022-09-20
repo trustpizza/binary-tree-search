@@ -46,16 +46,12 @@ class Tree
         return nil if node.nil?
         # No Children
         if value < node.data
-            if node.left_branch.nil? && node.right_branch.nil?
-                node.data = nil
-
-
-            if node.left_branch.nil && node.right_branch
-                node = node.right_branch
-            elsif node.left_branch && node.right_branch.nil?
-                node = node.left_branch
+            if node.left_branch.data == value
+                if node.left_branch.left_branch.nil? && node.left_branch.right_branch.nil?
+                    node.left_branch.data = nil
+                    node.left_branch = nil
+                end
             end
-
         end
     end
 
@@ -72,4 +68,3 @@ new_tree.pretty_print
 
 new_tree.insert(14)
 
-new_tree.pretty_print
