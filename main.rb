@@ -63,8 +63,9 @@ class Tree
 end
 
 
-new_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+new_tree = Tree.new([1, 7, 4])#, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 new_tree.pretty_print
 
-new_tree.insert(14)
+new_tree.delete(1)
 
+new_tree.pretty_print
