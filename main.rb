@@ -95,18 +95,65 @@ class Tree
         current_node.data
     end
 
+    def find(value, node = root)
+      return nil if node.nil?
+      
+      node = @root
+      until node.data == value
+        node = node.left_branch if value < node.data
+        node = node.right_branch if value > node.data
+      end
+      node
+    end
 
+    def level_order(node = root, queue = [])
+      puts "#{node.data}"
+
+      queue << node.left_branch unless node.left_branch.nil?
+      queue << node.right_branch unless node.right_branch.nil?
+      
+      return if queue.empty?
+      level_order(queue.shift, queue)
+    end  
+      #Visit the first value in the queue 
+      #First visit the left value in that node
+      # Put that node into the queue
+      # Second visit the left value in that node
+      # Put that node into the queue
+      # Remove the first item from the queue
+    def inorder(node = root)
+      unless node.nil?
+        inorder(node.left_branch)
+        puts node.data
+        inorder(node.right_branch)
+      end 
+    end
+
+    def preorder(node = root)
+      unless node.nil?
+        puts node.data
+        preorder(node.left_branch)
+        preorder(node.right_branch)
+      end
+    end
+      
+    def postorder(node = root)
+      unless node.nil?
+        postorder(node.left_branch)
+        postorder(node.right_branch)
+        p node.data
+      end
+    end
+  
     def pretty_print(node = root, prefix = '', is_left = true)
         pretty_print(node.right_branch, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_branch
         puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
         pretty_print(node.left_branch, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_branch
-      end
+    end
 end
 
 
 new_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 new_tree.pretty_print
 
-new_tree.delete(67)
 
-new_tree.pretty_print
