@@ -54,6 +54,9 @@ class Tree
                 elsif  node.left_branch.left_branch.nil?# Removes branches with 1 leaf
                     node.left_branch.data = nil
                     node.left_branch = node.left_branch.right_branch
+                else
+                    node.data = min_value(node.right_branch)
+                    delete(value, node.right_branch)
                 end
             else 
                 delete(value, node.left_branch)
@@ -69,12 +72,29 @@ class Tree
                 elsif node.right_branch.right_branch.nil?
                     node.right_branch.data = nil 
                     node.right_branch = node.right_branch.left_branch
+                else
+                    # Take the lowest value from the right side of the tree
+                    # That overwrites the node you're deleting
+                    # Delete the lowest value you took, but make the starting node the new node of the same value
+                    node.data = min_value(node.right_branch)
+                    delete(value, node.right_branch)
                 end
             else
                 delete(value, node.right_branch)
             end
         end
     end
+
+    def min_value(node)
+        current_node = node
+
+        until current_node.left_branch.nil?
+            current_node = current_node.left_branch
+        end
+        
+        current_node
+    end
+
 
     def pretty_print(node = root, prefix = '', is_left = true)
         pretty_print(node.right_branch, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_branch
