@@ -95,15 +95,14 @@ class Tree
         current_node.data
     end
 
-    def find(value, node = root)
+    def find(value, node = @root)
       return nil if node.nil?
-      
-      node = @root
-      until node.data == value
-        node = node.left_branch if value < node.data
-        node = node.right_branch if value > node.data
-      end
-      node
+      return node if node.data == value
+      #until node.data == value
+      #  node = node.left_branch if value < node.data
+       # node = node.right_branch if value > node.data
+      #end
+      value < node.data ? find(value, node.left_branch) : find(value, node.right_branch)
     end
 
     def level_order(node = root, queue = [])
@@ -121,39 +120,73 @@ class Tree
       # Second visit the left value in that node
       # Put that node into the queue
       # Remove the first item from the queue
-    def inorder(node = root)
-      unless node.nil?
-        inorder(node.left_branch)
-        puts node.data
-        inorder(node.right_branch)
-      end 
+    def inorder(node = root, out = [], &block)
+      return if node.nil?
+      
+      inorder(node.left_branch, out, &block)
+      out.push(block_given? ? block.call(node) : node.data)
+      inorder(node.right_branch, out, &block)
+
+      out
     end
 
-    def preorder(node = root)
-      unless node.nil?
-        puts node.data
-        preorder(node.left_branch)
-        preorder(node.right_branch)
-      end
+    def preorder(node = root, out = [], &block)
+      return if node.nil?
+      
+      out.push(block_given? ? block.call(node) : node.data)
+      preorder(node.left_branch, out, &block)
+      preorder(node.right_branch, out, &block)
+
+      out
     end
       
     def postorder(node = root)
-      unless node.nil?
-        postorder(node.left_branch)
-        postorder(node.right_branch)
-        p node.data
+      return if node.nil?
+
+      postorder(node.left_branch, out, &block)
+      postorder(node.right_branch, out, &block)
+      out.push(block_given? ? block.call(node) : node.data)
+
+      out
+    end
+
+    def height(node = root, count = -1)
+      return count if node.nil?
+
+      count += 1
+      [height(node.left_branch, count), height(node.right_branch, count)].max
+    end
+
+    def depth(node)
+      return nil if node.nil?
+
+      current_node = @root
+      count = 0
+      until current_node.data == node.data
+        count += 1
+        node.data < current_node.data ? current_node = current_node.left_branch : current_node = current_node.right_branch
       end
+      count
     end
   
+    def balanced?(node = root)
+      #Find the height of the left subtree
+      #Find the height of the right subtree
+      #If left_branch height is == right_branch height (+- 1) true, else false
+      left_height = height(node.left_branch, 0)
+      right_height = height(node.right_branch, 0)
+      return true if (left_height - right_height).between?(-1,1)
+      false
+    end
+
+    def rebalance
+      values = inorder
+      build_tree(values)
+    end
+    # made by a very smart student of The Odin Project
     def pretty_print(node = root, prefix = '', is_left = true)
         pretty_print(node.right_branch, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_branch
         puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
         pretty_print(node.left_branch, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left_branch
     end
 end
-
-
-new_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-new_tree.pretty_print
-
-
